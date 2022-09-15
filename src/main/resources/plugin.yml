@@ -1,0 +1,8 @@
+name: IAAngelTrophies
+version: '${project.version}'
+main: com.vergilprime.iaangeltrophies.IAAngelTrophies
+api-version: 1.19
+prefix: IAAT
+depend: [ ItemsAdder ]
+authors: [ VergilPrime ]
+description: Stickerable items that can be put on display!

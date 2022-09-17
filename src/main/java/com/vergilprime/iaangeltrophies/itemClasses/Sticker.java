@@ -17,8 +17,7 @@ public class Sticker {
 	private CustomStack customStack;
 	private HashMap<Material, CustomStack> conversions = new HashMap<>();
 
-	public Sticker(StickerManager stickerManager, ItemStack stack) {
-		CustomStack customStack = CustomStack.byItemStack(stack);
+	public Sticker(StickerManager stickerManager, CustomStack customStack) {
 		String itemName = customStack.getId();
 		ConfigurationSection config = customStack.getConfig().getConfigurationSection("items." + itemName);
 		if(config.isList("behaviours.furniture.sticker")) {

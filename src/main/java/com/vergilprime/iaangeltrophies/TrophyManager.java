@@ -1,10 +1,7 @@
 package com.vergilprime.iaangeltrophies;
 
-import com.vergilprime.iaangeltrophies.enums.Against;
-import com.vergilprime.iaangeltrophies.itemClasses.TrophyFurniture;
-import com.vergilprime.iaangeltrophies.itemClasses.TrophyStack;
+import com.vergilprime.iaangeltrophies.itemClasses.Trophy;
 import com.vergilprime.iaangeltrophies.itemClasses.utils.BlockFaceHelper;
-import dev.lone.itemsadder.api.CustomFurniture;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.FurniturePlaceEvent;
 import jdk.javadoc.internal.doclets.toolkit.util.Utils;
@@ -24,12 +21,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrophyFurnitureListener implements Listener {
+public class TrophyManager implements Listener {
 	private final IAAngelTrophies plugin;
 
 	List<Utils.Pair<FurniturePlaceEvent,Integer>> eventModelIdPairs = new ArrayList<>();
 
-	public TrophyFurnitureListener(IAAngelTrophies plugin) {
+	public TrophyManager(IAAngelTrophies plugin) {
 		this.plugin = plugin;
 	}
 
@@ -54,7 +51,7 @@ public class TrophyFurnitureListener implements Listener {
 				event.setCancelled(true);
 			}else{
 				// Get the trophy which will find configured model IDs for ceiling, wall and floor placement.
-				TrophyStack trophy =  new TrophyStack(item);
+				Trophy trophy =  new Trophy(item);
 				// Get the block face the player is facing
 				BlockFace face = BlockFaceHelper.getTargetBlockFace(player);
 				// If the face is down and the ceiling model is configured, store the event and model ID for the success event.

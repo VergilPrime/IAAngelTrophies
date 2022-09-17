@@ -1,17 +1,15 @@
 package com.vergilprime.iaangeltrophies.itemClasses;
 
-import com.vergilprime.iaangeltrophies.enums.Against;
-import dev.lone.itemsadder.api.CustomFurniture;
 import dev.lone.itemsadder.api.CustomStack;
 import org.bukkit.configuration.ConfigurationSection;
 
-public class TrophyStack {
+public class Trophy {
 	private Integer ceiling;
 	private Integer wall;
 	private Integer floor;
 	private CustomStack customStack;
 
-	public TrophyStack(CustomStack stack) {
+	public Trophy(CustomStack stack) {
 		customStack = stack;
 		String itemName = customStack.getId();
 		ConfigurationSection config = customStack.getConfig().getConfigurationSection("items." + itemName);

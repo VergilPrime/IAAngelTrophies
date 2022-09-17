@@ -14,10 +14,29 @@ import java.util.HashMap;
 public class StickerManager implements Listener {
 	private HashMap<Material, ArrayList<Sticker>> stickers = new HashMap<>();
 
-	@EventHandler(ignoreCancelled = true, priority = org.bukkit.event.EventPriority.HIGH){
-		public void onCustomItemsLoadedEvent(ItemsAdderLoadDataEvent event){
-			ArrayList<CustomStack> customItems =  ItemsAdder.getAllItems();
-
+	@EventHandler(priority = org.bukkit.event.EventPriority.HIGH, ignoreCancelled = true)
+	public void onCustomItemsLoadedEvent(ItemsAdderLoadDataEvent event){
+		ArrayList<CustomStack> customItems = (ArrayList)ItemsAdder.getAllItems();
+		for (CustomStack customItem : customItems) {
+			if (customItem.getConfig().getConfigurationSection("items." + customItem.getId() + ".behaviours.furniture.sticker") != null) {
+				Sticker sticker = new Sticker(this, customItem);
+				sticker.getConversions().forEach((material,customStack) -> {
+					if (stickers.containsKey(material)) {
+						stickers.get(material).add(sticker);
+					} else {
+						ArrayList<Sticker> list = new ArrayList<>();
+						list.add(sticker);
+						stickers.put(material, list);
+					}
+				});
+				if (stickers.containsKey(sticker.getMaterial())) {
+					stickers.get(sticker.getMaterial()).add(sticker);
+				} else {
+					ArrayList<Sticker> stickerList = new ArrayList<>();
+					stickerList.add(sticker);
+					stickers.put(sticker.getMaterial(), stickerList);
+				}
+			}
 		}
 	}
 

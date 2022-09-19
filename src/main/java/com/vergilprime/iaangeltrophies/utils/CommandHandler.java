@@ -1,16 +1,16 @@
-package com.vergilprime.iaangeltrophies;
+package com.vergilprime.iaangeltrophies.utils;
 
+import com.vergilprime.iaangeltrophies.IAAngelTrophies;
 import com.vergilprime.iaangeltrophies.utils.MessageFormatter;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.C;
 
-public class Commandler implements CommandExecutor, TabCompleter {
+public class CommandHandler implements CommandExecutor, TabCompleter {
 	private final IAAngelTrophies plugin;
 
-	public Commandler(IAAngelTrophies plugin) {
+	public CommandHandler(IAAngelTrophies plugin) {
 		this.plugin = plugin;
 		PluginCommand cmd = plugin.getCommand("skin");
 		cmd.setExecutor(this);
@@ -39,19 +39,19 @@ public class Commandler implements CommandExecutor, TabCompleter {
 		}
 		Player player = (Player) sender;
 		if (args[0].equalsIgnoreCase("merge")) {
-			if (hasPermission(sender, mergePermission)) {
-				Main.getInstance().getStickerManager().merge(player);
+			if (sender.hasPermission("angeltrophies.merge")) {
+				plugin.getInstance().getStickerManager().merge(player);
 			}
 		} else if (args[0].equalsIgnoreCase("split")) {
-			if (hasPermission(sender, splitPermission)) {
-				Main.getInstance().getStickerManager().split(player);
+			if (sender.hasPermission("angeltrophies.split")) {
+				plugin.getInstance().getStickerManager().split(player);
 			}
 		} else if (args[0].equalsIgnoreCase("lost")) {
-			if (hasPermission(sender, lostPermission)) {
-				Main.getInstance().getStickerManager().claimLostSkins(player);
+			if (sender.hasPermission("angeltrophies.lost")) {
+				plugin.getInstance().getStickerManager().recoverLostStickers(player);
 			}
 		} else {
-			C.error(player, "Unknown subcommand {0}", args[0]);
+			MessageFormatter.errorFormat(player, "Unknown subcommand {0}", args[0]);
 		}
 		return true;
 	}

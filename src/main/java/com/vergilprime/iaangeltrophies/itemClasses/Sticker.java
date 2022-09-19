@@ -1,9 +1,8 @@
 package com.vergilprime.iaangeltrophies.itemClasses;
 
-import com.sun.tools.javac.util.Pair;
-import com.vergilprime.iaangeltrophies.StickerManager;
+import com.vergilprime.iaangeltrophies.utils.StickerManager;
+import com.vergilprime.iaangeltrophies.exceptions.NoConversionException;
 import dev.lone.itemsadder.api.CustomStack;
-import dev.lone.itemsadder.api.ItemsAdder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +28,7 @@ public class Sticker {
 				conversions.put(baseItem, becomes);
 			}
 		}
-		stickerManager.addSticker(this);
+		stickerManager.registerSticker(this);
 	}
 
 	public HashMap<Material, CustomStack> getConversions() {
@@ -40,13 +39,24 @@ public class Sticker {
 		return customStack;
 	}
 
+	/**
+	 * Can this sticker be applied to this item?
+	 * @param stack
+	 * @return
+	 */
 	public boolean canSticker (ItemStack stack) {
 		return conversions.containsKey(stack.getType());
 	}
 
-	public CustomStack getStickeredItem (ItemStack stack) {
+	/**
+	 * Returns an ItemsAdder CustomStack which results from stickering the given itemstack with properties copied from the itemstack.
+	 * @param stack
+	 * @return
+	 * @throws NoConversionException
+	 */
+	public CustomStack getStickeredItem (ItemStack stack) throws NoConversionException {
 		if (canSticker(stack)) {
-			CustomStack stickered = conversions.get(stack.getType());
+			CustomStack stickered = getConversion(stack);
 			ItemMeta stickeredMeta = stickered.getItemStack().getItemMeta();
 			ItemMeta stackMeta = stack.getItemMeta();
 			String displayName = stackMeta.hasDisplayName() ? stackMeta.getDisplayName() : stickeredMeta.getDisplayName();
@@ -65,7 +75,32 @@ public class Sticker {
 
 			stickered.getItemStack().setItemMeta(stickeredMeta);
 			return stickered;
+		}else{
+			throw new NoConversionException("This sticker does not have a conversion for " + stack.getType().name());
 		}
-		return null;
+	}
+
+	/**
+	 * Returns a brand new ItemsAdder CustomStack which results from stickering the given itemstack.
+	 * @param itemStack
+	 * @return
+	 * @throws NoConversionException
+	 */
+	public CustomStack getConversion(ItemStack itemStack) throws NoConversionException {
+		return getConversion(itemStack.getType());
+	}
+
+	/**
+	 * Returns a brand new ItemsAdder CustomStack which results from stickering the given material.
+	 * @param type
+	 * @return
+	 * @throws NoConversionException
+	 */
+	public CustomStack getConversion(Material type) throws NoConversionException {
+		if(conversions.containsKey(type)) {
+			return(conversions.get(type));
+		}else{
+			throw new NoConversionException("This sticker does not have a conversion for " + type.name());
+		}
 	}
 }

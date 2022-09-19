@@ -1,5 +1,6 @@
-package com.vergilprime.iaangeltrophies;
+package com.vergilprime.iaangeltrophies.utils;
 
+import com.vergilprime.iaangeltrophies.IAAngelTrophies;
 import com.vergilprime.iaangeltrophies.itemClasses.Trophy;
 import com.vergilprime.iaangeltrophies.itemClasses.utils.BlockFaceHelper;
 import dev.lone.itemsadder.api.CustomStack;
@@ -28,6 +29,7 @@ public class TrophyManager implements Listener {
 
 	public TrophyManager(IAAngelTrophies plugin) {
 		this.plugin = plugin;
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
 	/**

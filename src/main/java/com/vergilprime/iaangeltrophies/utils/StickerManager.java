@@ -34,51 +34,49 @@ public class StickerManager implements Listener {
 		plugin.getPersistenceManager().loadLostStickers();
 	}
 
+	/**
+	 * This event is called when ItemsAdder loads.
+	 * This populates the sticker map with all stickers registered in ItemsAdder.
+	 * @param event The event object.
+	 */
 	@EventHandler(priority = org.bukkit.event.EventPriority.HIGH, ignoreCancelled = true)
 	public void onCustomItemsLoadedEvent(ItemsAdderLoadDataEvent event){
+		// get a list of all custom items from ItemsAdder
 		ArrayList<CustomStack> customItems = (ArrayList)ItemsAdder.getAllItems();
+		// loop through all custom items
 		for (CustomStack customItem : customItems) {
+			// if the item contains the configuration section for a sticker, add it to the sticker map
 			if (customItem.getConfig().getConfigurationSection("items." + customItem.getId() + ".behaviours.furniture.sticker") != null) {
+				// Create a new sticker object using the customItem
 				Sticker sticker = new Sticker(this, customItem);
+				// Loop through all the conversions for this sticker
 				sticker.getConversions().forEach((material,customStack) -> {
+					// If the sticker map already contains a list of stickers for this material, add the sticker to the list
 					if (stickers.containsKey(material)) {
 						stickers.get(material).add(sticker);
 					} else {
+						// If the sticker map does not contain a list of stickers for this material, create a new list and add the sticker to it
 						ArrayList<Sticker> list = new ArrayList<>();
 						list.add(sticker);
 						stickers.put(material, list);
 					}
 				});
-				if (stickers.containsKey(sticker.getMaterial())) {
-					stickers.get(sticker.getMaterial()).add(sticker);
-				} else {
-					ArrayList<Sticker> stickerList = new ArrayList<>();
-					stickerList.add(sticker);
-					stickers.put(sticker.getMaterial(), stickerList);
-				}
 			}
 		}
 	}
 
+	/**
+	 * This event is called when a player dies.
+	 * This checks if the player has any stickers or skinned items in their inventory and adds them to the lostStickers map.
+	 * @param event The event object.
+	 */
 	@EventHandler(priority = org.bukkit.event.EventPriority.HIGH, ignoreCancelled = true)
 	public void onPlayerDeath(PlayerDeathEvent event){
 		Player player = event.getEntity();
 		PlayerInventory inventory = player.getInventory();
+		// For each item in the player's inventory
 		inventory.forEach(itemStack -> {
-			if (itemStack != null && itemStack.getType() != Material.AIR) {
-				if (stickers.containsKey(itemStack.getType())) {
-					for (Sticker sticker : stickers.get(itemStack.getType())) {
-						if (sticker.canSticker(itemStack)) {
-							try {
-								CustomStack customStack = sticker.getStickeredItem(itemStack);
-								lostSkins.add(new Pair<>(player.getUniqueId(), customStack));
-							} catch (Sticker.NoConversionException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-			}
+
 		});
 	}
 

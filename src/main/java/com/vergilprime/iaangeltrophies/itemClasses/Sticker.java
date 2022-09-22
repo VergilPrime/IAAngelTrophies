@@ -59,8 +59,8 @@ public class Sticker {
 			CustomStack stickered = getConversion(stack);
 			ItemMeta stickeredMeta = stickered.getItemStack().getItemMeta();
 			ItemMeta stackMeta = stack.getItemMeta();
-			String displayName = stackMeta.hasDisplayName() ? stackMeta.getDisplayName() : stickeredMeta.getDisplayName();
-			List<String> lore = stackMeta.hasLore() ? stackMeta.getLore() : stickeredMeta.getLore();
+			stickeredMeta.setDisplayName( stackMeta.hasDisplayName() ? stackMeta.getDisplayName() : stickeredMeta.getDisplayName() );
+			stickeredMeta.setLore( stackMeta.hasLore() ? stackMeta.getLore() : stickeredMeta.getLore() );
 			if(stack instanceof Damageable) {
 				((Damageable) stickeredMeta).setDamage(((Damageable) stackMeta).getDamage());
 			}
